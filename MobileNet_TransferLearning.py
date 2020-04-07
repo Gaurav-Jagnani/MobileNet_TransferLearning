@@ -25,8 +25,7 @@ def define_model(input_shape, n_classes):
 
 	return model
 
-
-# Train
+# Training utilities
 epochs = 10
 batch_size = 32
 num_classes = 10
@@ -40,7 +39,6 @@ loss = tf.losses.SparseCategoricalCrossentropy(from_logits=True)
 optimizer = tf.optimizers.Adam(0.001)
 accuracy = tf.metrics.Accuracy()
 step = tf.Variable(1, name="global_step")
-
 
 @tf.function
 def train_step(inputs, labels):
@@ -56,7 +54,6 @@ def train_step(inputs, labels):
 
 	return loss_value, accuracy_value
 
-
 num_batches = X_train.shape[0] // batch_size
 
 ckpt = tf.train.Checkpoint(model=model,
@@ -65,6 +62,7 @@ manager = tf.train.CheckpointManager(
 	ckpt, "log/checkpoints", max_to_keep=2)
 
 writer = tf.summary.create_file_writer("log/TransferLearning")
+
 with writer.as_default():
 	for epoch in range(epochs):
 		for batch in range(num_batches):
